@@ -1,2 +1,3 @@
 - https://github.com/andreroggeri/pynubank/issues/462
 - https://meu.pluggy.ai/account
+- https://dashboard.pluggy.ai/applications
