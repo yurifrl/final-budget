@@ -1,3 +1,8 @@
 - https://github.com/andreroggeri/pynubank/issues/462
 - https://meu.pluggy.ai/account
 - https://dashboard.pluggy.ai/applications
+- https://www.postman.com/pluggy-official/pluggy-public/environment/10111094-d7b56a89-262b-4ff3-a577-3781ad77f907
+- https://dashboard.pluggy.ai/
+- https://github.com/pluggyai/quickstart/blob/master/frontend/nextjs/pages/api/token.ts
+- https://github.com/search?q=pluggy+nubank&type=issues
+- https://github.com/pluggyai/meu-pluggy
