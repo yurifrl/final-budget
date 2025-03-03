@@ -3,7 +3,6 @@
     "dockerComposeFile": "../compose.yaml",
     "service": "sh",
     "workspaceFolder": "/app",
-    
     "customizations": {
         "vscode": {
             "extensions": [
@@ -15,18 +14,11 @@
                 "njpwerner.autodocstring"
             ],
             "settings": {
-                "python.formatting.provider": "black",
-                "python.linting.enabled": true,
-                "python.linting.flake8Enabled": true,
-                "python.linting.mypyEnabled": true,
                 "editor.formatOnSave": true,
-                "editor.codeActionsOnSave": {
-                    "source.organizeImports": true
-                },
                 "terminal.integrated.shell.linux": "fish",
                 "dev.containers.copyGitConfig": true
             }
         }
     },
     "remoteUser": "root"
-} 
+}

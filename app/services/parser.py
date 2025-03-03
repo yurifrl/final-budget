@@ -30,13 +30,17 @@ class AIParser:
         """
         try:
             prompt = (
-                "Parse this bank statement text into a JSON array of "
-                "transactions.\nEach transaction should have:\n"
+                "Parse this bank statement text into a JSON array of transactions.\n"
+                "Each transaction should have:\n"
                 "- date (YYYY-MM-DD)\n"
-                "- description (string)\n"
-                "- amount (string with 2 decimal places, negative for "
-                "debits)\n\n"
-                "Only return the JSON array, no other text.\n"
+                "- description (full original text)\n"
+                "- amount (string with 2 decimal places, negative for debits)\n"
+                "- merchant_name (name of establishment)\n"
+                "- merchant_location (city/location if available)\n"
+                "- category (transaction category if available)\n"
+                "- payment_method (web/mobile/pos/atm based on * or @ symbols)\n"
+                "- card_last_digits (if available)\n"
+                "\nOnly return the JSON array, no other text.\n"
                 f"Text to parse:\n{raw_text}"
             )
             

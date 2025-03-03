@@ -8,7 +8,7 @@ from app.services.all import Pipeline
 
 
 def main(
-    input_directory: str = "data/raw",
+    input_directory: str = "data/raw/real",
     output_path: str = "data/processed/transactions.csv"
 ) -> int:
     """
@@ -42,7 +42,7 @@ def main(
 
 if __name__ == "__main__":
     # Use command line arguments if provided, otherwise use defaults
-    input_dir = sys.argv[1] if len(sys.argv) > 1 else "data/raw"
+    input_dir = sys.argv[1] if len(sys.argv) > 1 else "data/raw/real"
     output_file = sys.argv[2] if len(sys.argv) > 2 else "data/processed/transactions.csv"
     
     sys.exit(main(input_dir, output_file))

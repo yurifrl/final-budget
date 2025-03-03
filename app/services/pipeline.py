@@ -2,11 +2,13 @@
 Orchestrates the ETL pipeline for processing bank statements.
 """
 
-from .extractor import DataExtractor
+from .data_input import DataInput
+from .extractor import DataExtractor, ExtractedData
 from .parser import AIParser
 from .transformer import DataTransformer
 from .loader import DataLoader
-from .data_input import DataInput
+from typing import Optional, List
+from pathlib import Path
 
 
 class Pipeline:
@@ -17,54 +19,60 @@ class Pipeline:
     input → extraction → parsing → transformation → loading.
     """
     
-    def __init__(self, input_directory: str = "data/raw"):
-        self.input = DataInput(input_directory)
+    def __init__(self):
+        self.input = DataInput("data/raw/real")
         self.extractor = DataExtractor()
         self.parser = AIParser()
         self.transformer = DataTransformer()
         self.loader = DataLoader()
     
-    def run(self, output_path: str) -> bool:
-        """
-        Runs the complete ETL pipeline on all input files.
-        
-        Args:
-            output_path: Path where the CSV should be saved
+    def process_file(self, file_path: Path) -> bool:
+        """Process a single file through the pipeline."""
+        try:
+            print(f"\nProcessing file: {file_path}")
             
-        Returns:
-            True if successful, False otherwise
-        """
-        print("Starting pipeline...")
-        
-        # Process each input file
-        for file_path in self.input:
-            print(f"Processing file: {file_path}")
-            
-            # Extract
-            print("Extracting text from image...")
-            raw_text = self.extractor.extract(str(file_path))
-            if not raw_text:
-                continue
+            # Extract text and metadata
+            print("Extracting text...")
+            extracted_data = self.extractor.extract(str(file_path))
+            if not extracted_data:
+                print(f"Failed to extract text from {file_path}")
+                return False
                 
-            # Parse with AI
-            print("Parsing text with AI...")
-            parsed_data = self.parser.parse(raw_text)
+            # Parse the extracted text
+            print("Parsing data...")
+            parsed_data = self.parser.parse(extracted_data.raw_text)
             if not parsed_data:
-                continue
-                
-            # Transform
+                print(f"Failed to parse data from {file_path}")
+                return False
+
+            # Transform data into transactions
             print("Transforming data...")
-            transactions = self.transformer.transform(parsed_data)
-            if not transactions:
-                continue
-                
-            # Load
-            print("Loading data to CSV...")
-            success = self.loader.load_to_csv(transactions, output_path)
-            
-            if not success:
-                print(f"Failed to process file: {file_path}")
-                continue
-                
-        print(f"Pipeline completed. Output: {output_path}")
-        return True 
+            raw_transactions = self.transformer.transform(
+                parsed_data,
+                str(extracted_data.file_path),
+                extracted_data.file_type
+            )
+            if not raw_transactions:
+                print(f"Failed to transform data from {file_path}")
+                return False
+
+            # Load transactions to CSV
+            print("Loading to CSV...")
+            if not self.loader.load_to_csv(raw_transactions):
+                print(f"Failed to load data from {file_path}")
+                return False
+
+            print(f"Successfully processed {file_path}")
+            return True
+
+        except Exception as e:
+            print(f"Error processing {file_path}: {e}")
+            return False
+
+    def run(self) -> bool:
+        """Run the pipeline on all files in the input directory."""
+        success = True
+        for file_path in self.input.files:
+            if not self.process_file(file_path):
+                success = False
+        return success 

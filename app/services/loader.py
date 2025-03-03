@@ -3,8 +3,8 @@ Handles loading transformed data into the final CSV format.
 """
 
 import pandas as pd
-from typing import List
-from .transformer import Transaction
+from typing import List, Union
+from .transformer import RawTransaction, EnrichedTransaction
 
 
 class DataLoader:
@@ -16,7 +16,9 @@ class DataLoader:
     """
     
     def load_to_csv(
-        self, transactions: List[Transaction], output_path: str
+        self,
+        transactions: List[Union[RawTransaction, EnrichedTransaction]],
+        output_path: str
     ) -> bool:
         """
         Saves transactions to a CSV file.
@@ -29,17 +31,32 @@ class DataLoader:
             True if successful, False otherwise
         """
         try:
-            # Convert to DataFrame
-            df = pd.DataFrame([
-                {
-                    'date': t.date.strftime('%Y-%m-%d'),
-                    'description': t.description,
-                    'amount': str(t.amount)
-                }
-                for t in transactions
-            ])
+            records = []
+            for t in transactions:
+                if isinstance(t, RawTransaction):
+                    records.append({
+                        'date': t.date.strftime('%Y-%m-%d'),
+                        'description': t.description,
+                        'amount': str(t.amount),
+                        'source_file': t.source_file,
+                        'source_type': t.source_type.value
+                    })
+                else:  # EnrichedTransaction
+                    records.append({
+                        'date': t.raw.date.strftime('%Y-%m-%d'),
+                        'description': t.raw.description,
+                        'amount': str(t.raw.amount),
+                        'merchant_name': t.merchant_name,
+                        'merchant_location': t.merchant_location or '',
+                        'merchant_category': t.merchant_category or '',
+                        'payment_channel': t.payment_channel.value,
+                        'card_last_digits': t.card_last_digits or '',
+                        'account_holder': t.account_holder,
+                        'source_file': t.raw.source_file,
+                        'source_type': t.raw.source_type.value
+                    })
             
-            # Save to CSV
+            df = pd.DataFrame(records)
             df.to_csv(output_path, index=False)
             return True
         except Exception as e:

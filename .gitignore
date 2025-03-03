@@ -1,5 +1,6 @@
-# mine
-data/
+# Data
+data/raw/real/
+data/processed/
 # Ours
 secrets/
 outputs/
