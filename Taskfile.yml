@@ -2,11 +2,7 @@ version: '3'
 
 # Define the tasks
 tasks:
-  testpipenv:
-    desc: Run tests with pytest in verbose mode
-    cmds:
-      - pipenv run python -m pytest tests/ -v 
   test:
     desc: Run tests with pytest in verbose mode
     cmds:
-      - python -m pytest tests/ -v 
+      - python -m pytest tests/ -v -s
