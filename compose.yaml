@@ -1,0 +1,18 @@
+services:
+  sh:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    volumes:
+      - .:/app

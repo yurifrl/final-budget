@@ -1,26 +1,35 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.11
+# Base image
+FROM python as base
 
-# Install required packages
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc fish git wget unzip libatomic1 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
-# Install pipenv
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-por \
+    poppler-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install pipenv
 
-# Set the working directory
+COPY Pipfile Pipfile.lock ./
+RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy --dev
+
+# Dev environment
+FROM base as dev
+RUN pip install go-task-bin
+RUN apt-get update && apt-get install -y fish \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copy Pipfile and Pipfile.lock to the working directory
-COPY Pipfile Pipfile.lock ./
+# Copy the virtual environment and ensure its binaries are in PATH
+COPY --from=base /.venv /.venv
+ENV PATH="/.venv/bin:$PATH"
 
-# Install Python dependencies using pipenv
-RUN pipenv install --deploy --system
-
-# Copy the rest of the application code to the working directory
 COPY . .
-
-# Entry point for the container
 CMD ["fish"]
+
+# Prod environment
+FROM base as prod
+COPY . .
+CMD ["python", "main.py"]

@@ -4,12 +4,19 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-# Add development dependencies here
+pytest = "*"
+black = "*"
+mypy = "*"
+flake8 = "*"
 
 [packages]
-pynubank = "*"
+pytesseract = "*"
+pdf2image = "*"
+pandas = "*"
+requests = "*"
 python-dotenv = "*"
-
+dataclasses = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.11"

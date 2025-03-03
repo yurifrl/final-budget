@@ -1,0 +1,6 @@
+---
+description: Python preferences 
+globs: 
+alwaysApply: false
+---
+- Use pipenv not requirements.txt
