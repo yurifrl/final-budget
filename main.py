@@ -13,11 +13,11 @@ def main(
 ) -> int:
     """
     Run the bank statement processing pipeline.
-    
+
     Args:
         input_directory: Directory containing bank statement files
         output_path: Path where to save the processed transactions
-    
+
     Returns:
         int: 0 for success, 1 for failure
     """
@@ -28,15 +28,15 @@ def main(
 
     # Create output directory if it doesn't exist
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Run pipeline
     pipeline = Pipeline(input_directory)
     success = pipeline.run(output_path)
-    
+
     if not success:
         print("Pipeline failed. Check the logs for details.")
         return 1
-    
+
     return 0
 
 
@@ -44,5 +44,5 @@ if __name__ == "__main__":
     # Use command line arguments if provided, otherwise use defaults
     input_dir = sys.argv[1] if len(sys.argv) > 1 else "data/raw/real"
     output_file = sys.argv[2] if len(sys.argv) > 2 else "data/processed/transactions.csv"
-    
+
     sys.exit(main(input_dir, output_file))
