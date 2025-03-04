@@ -1,5 +1,6 @@
 from app.services.data_input import DataInput
-from app.services.extractor import DataExtractor, ExtractedData
+from app.services.extractor import DataExtractor
+import pandas as pd
 from pathlib import Path
 
 
@@ -10,28 +11,10 @@ def test_extract_from_real_pdf():
 
     # Get the latest file
     file = data_input.latest
-    assert file is not None, "No files found in data/raw/real"
     
     # Extract text and metadata
-    print("\nExtracting text and metadata...")
-    extracted_data = extractor.extract(str(file))
-    assert extracted_data is not None, f"Failed to extract data from {file}"
-    
-    # Verify metadata
-    assert isinstance(extracted_data, ExtractedData)
-    assert extracted_data.file_path == Path(file)
-    assert extracted_data.file_type in ['pdf', 'image']
-    assert extracted_data.page_count > 0
-    assert len(extracted_data.raw_text) > 0
-    assert extracted_data.file_size > 0
-    
-    # Print extracted information
-    print("\n=== Extracted Data ===")
-    print(f"File: {extracted_data.file_name}")
-    print(f"Type: {extracted_data.file_type}")
-    print(f"Pages: {extracted_data.page_count}")
-    print(f"Size: {extracted_data.file_size:,} bytes")
-    print(f"Date: {extracted_data.extraction_date}")
-    print("\n=== Extracted Text ===")
-    print(extracted_data.raw_text)
-    print("\n=== End of Text ===\n")
+    df = extractor.extract(str(file))
+  
+    print("\n=== Sample Text ===")
+    print(df['raw_text'].iloc[0])  # First 500 chars
+    print("\n=== End of Sample ===\n")

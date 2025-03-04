@@ -8,6 +8,8 @@ services:
       - .:/app
     stdin_open: true
     tty: true
+    environment:
+      - LLM_API_URL=$OLLAMA_HOST
 
   app:
     build:

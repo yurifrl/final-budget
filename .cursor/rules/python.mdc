@@ -1,6 +1,7 @@
 ---
-description: Python preferences 
+description: Python preferences
 globs: 
 alwaysApply: false
 ---
 - Use pipenv not requirements.txt
+- Dont use try catch

@@ -67,14 +67,6 @@ class DataInput:
         ]
     
     def __iter__(self) -> Iterator[Path]:
-        """
-        Enables iteration over files in chronological order (newest to oldest).
-        
-        Example:
-            handler = FileHandler("statements/")
-            for file in handler:
-                process_file(file)
-        """
         self._refresh_files()
         return iter(self._files)
     

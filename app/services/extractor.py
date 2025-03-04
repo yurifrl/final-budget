@@ -6,106 +6,97 @@ from pathlib import Path
 from PIL import Image
 from dataclasses import dataclass
 from datetime import datetime
+import pandas as pd
+import hashlib
 
 
 @dataclass
-class ExtractedData:
-    """Container for extracted text data and its metadata."""
-    raw_text: str
-    file_path: Path
-    file_type: str  # 'pdf' or 'image'
+class ExtractionMetadata:
+    """Metadata about the extraction process and source."""
+    source_path: Path
+    source_type: str
+    extraction_timestamp: datetime
+    file_hash: str
     page_count: int
-    extraction_date: datetime
-    file_name: str
-    file_size: int  # in bytes
-    
-    @property
-    def is_multipage(self) -> bool:
-        return self.page_count > 1
+    extraction_status: str
 
 
 class DataExtractor:
-    # Supported image formats
-    IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.tiff', '.bmp'}
+    def __init__(self):
+        self.supported_types = {'.pdf', '.png', '.jpg', '.jpeg', '.tiff', '.bmp'}
+        
+    def _compute_file_hash(self, file_path: Path) -> str:
+        """Compute SHA-256 hash of file for tracking."""
+        sha256_hash = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        return sha256_hash.hexdigest()
     
-    def is_image_file(self, file_path: str) -> bool:
-        """Check if the file is a supported image format."""
-        return Path(file_path).suffix.lower() in self.IMAGE_EXTENSIONS
+    def _get_source_type(self, file_path: Path) -> str:
+        """Determine source type from file extension."""
+        ext = file_path.suffix.lower()
+        if ext == '.pdf':
+            return 'pdf'
+        elif ext in {'.png', '.jpg', '.jpeg', '.tiff', '.bmp'}:
+            return 'image'
+        raise ValueError(f"Unsupported file type: {ext}")
     
-    def is_pdf_file(self, file_path: str) -> bool:
-        """Check if the file is a PDF."""
-        return Path(file_path).suffix.lower() == '.pdf'
-    
-    def get_page_count(self, file_path: str) -> int:
-        """Get the number of pages in a PDF file."""
-        if not self.is_pdf_file(file_path):
-            return 1  # Image files are single page
+    def extract(self, file_path: str) -> pd.DataFrame:
+        path = Path(file_path)
+        source_type = self._get_source_type(path)
+        file_hash = self._compute_file_hash(path)
+        
+        # Initialize metadata
+        metadata = ExtractionMetadata(
+            source_path=path,
+            source_type=source_type,
+            extraction_timestamp=datetime.now(),
+            file_hash=file_hash,
+            page_count=0,
+            extraction_status='started'
+        )
+        
+        extracted_data = []
+        
+        if source_type == 'image':
+            # Process single image
+            image = Image.open(path)
+            text = pytesseract.image_to_string(image, lang='por')
+            metadata.page_count = 1
+            extracted_data.append({
+                'raw_text': text,
+                'page_number': 1,
+                'metadata': metadata
+            })
             
-        with open(file_path, 'rb') as file:
-            pdf = PdfReader(file)
-            return len(pdf.pages)
-    
-    def extract(self, file_path: str) -> Optional[ExtractedData]:
-        """Extract text from a file and return it with metadata."""
-        try:
-            path = Path(file_path)
-            file_size = path.stat().st_size
+        else:  # PDF
+            # Get page count
+            with open(path, 'rb') as file:
+                pdf = PdfReader(file)
+                metadata.page_count = len(pdf.pages)
             
-            if self.is_image_file(file_path):
-                # Handle image files directly
-                print(f"Processing image file: {file_path}")
-                image = Image.open(file_path)
+            # Convert and extract from each page
+            images = convert_from_path(
+                file_path,
+                first_page=1,
+                last_page=metadata.page_count
+            )
+            
+            for i, image in enumerate(images, 1):
                 text = pytesseract.image_to_string(image, lang='por')
-                
-                return ExtractedData(
-                    raw_text=text,
-                    file_path=path,
-                    file_type='image',
-                    page_count=1,
-                    extraction_date=datetime.now(),
-                    file_name=path.name,
-                    file_size=file_size
-                )
-            
-            elif self.is_pdf_file(file_path):
-                # Handle PDF files
-                print(f"Processing PDF file: {file_path}")
-                total_pages = self.get_page_count(file_path)
-                print(f"PDF has {total_pages} pages")
-                
-                # Convert all pages to images
-                images = convert_from_path(
-                    file_path,
-                    first_page=1,
-                    last_page=total_pages
-                )
-                if not images:
-                    raise ValueError("No pages found in PDF")
-                
-                # Extract text from all pages
-                texts = []
-                for i, image in enumerate(images, 1):
-                    print(f"Processing page {i}/{total_pages}")
-                    text = pytesseract.image_to_string(image, lang='por')
-                    texts.append(text)
-                
-                # Combine all texts with page separators
-                full_text = "\n=== Page Break ===\n".join(texts)
-                
-                return ExtractedData(
-                    raw_text=full_text,
-                    file_path=path,
-                    file_type='pdf',
-                    page_count=total_pages,
-                    extraction_date=datetime.now(),
-                    file_name=path.name,
-                    file_size=file_size
-                )
-            
-            else:
-                suffix = Path(file_path).suffix
-                raise ValueError(f"Unsupported file format: {suffix}")
-                
-        except Exception as e:
-            print(f"Error in extraction stage: {e}")
-            return None 
+                extracted_data.append({
+                    'raw_text': text,
+                    'page_number': i,
+                    'metadata': metadata
+                })
+        
+        # Create DataFrame with extraction results
+        metadata.extraction_status = 'completed'
+        df = pd.DataFrame(extracted_data)
+        
+        # Add extraction metadata as columns
+        for field in metadata.__dataclass_fields__:
+            df[f'meta_{field}'] = getattr(metadata, field)
+        
+        return df 

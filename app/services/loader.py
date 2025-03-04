@@ -1,64 +1,26 @@
 """
-Handles loading transformed data into the final CSV format.
+Data loading layer for bank statement processing.
+
+This layer handles:
+1. Saving processed data to CSV format
+2. Data versioning and organization
 """
 
 import pandas as pd
-from typing import List, Union
-from .transformer import RawTransaction, EnrichedTransaction
+from pathlib import Path
 
 
 class DataLoader:
-    """
-    Handles loading transformed data into the final CSV format.
+    def __init__(self, output_dir: str = "data/processed"):
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
     
-    Responsible for converting Transaction objects into a CSV file
-    that can be used for further analysis or reporting.
-    """
-    
-    def load_to_csv(
-        self,
-        transactions: List[Union[RawTransaction, EnrichedTransaction]],
-        output_path: str
-    ) -> bool:
-        """
-        Saves transactions to a CSV file.
+    def load_to_csv(self, df: pd.DataFrame) -> Path:
+        if df.empty:
+            raise ValueError("No data to save")
         
-        Args:
-            transactions: List of Transaction objects to save
-            output_path: Path where the CSV file should be saved
-            
-        Returns:
-            True if successful, False otherwise
-        """
-        try:
-            records = []
-            for t in transactions:
-                if isinstance(t, RawTransaction):
-                    records.append({
-                        'date': t.date.strftime('%Y-%m-%d'),
-                        'description': t.description,
-                        'amount': str(t.amount),
-                        'source_file': t.source_file,
-                        'source_type': t.source_type.value
-                    })
-                else:  # EnrichedTransaction
-                    records.append({
-                        'date': t.raw.date.strftime('%Y-%m-%d'),
-                        'description': t.raw.description,
-                        'amount': str(t.raw.amount),
-                        'merchant_name': t.merchant_name,
-                        'merchant_location': t.merchant_location or '',
-                        'merchant_category': t.merchant_category or '',
-                        'payment_channel': t.payment_channel.value,
-                        'card_last_digits': t.card_last_digits or '',
-                        'account_holder': t.account_holder,
-                        'source_file': t.raw.source_file,
-                        'source_type': t.raw.source_type.value
-                    })
-            
-            df = pd.DataFrame(records)
-            df.to_csv(output_path, index=False)
-            return True
-        except Exception as e:
-            print(f"Error in loading stage: {e}")
-            return False 
+        # Save transaction data
+        output_path = self.output_dir / "transactions.csv"
+        df.to_csv(output_path, index=False)
+        
+        return output_path 
