@@ -13,13 +13,15 @@ flake8 = "*"
 pytesseract = "*"
 pdf2image = "*"
 requests = "*"
-
 python-dotenv = "*"
 dataclasses = "*"
 pytest = "*"
 pypdf = "*"
 langchain = "*"
 langchain-community = "*"
+langchain-openai = "*"
+langchain-unstructured = "*"
+langchain-core = "*"
 
 [requires]
 python_version = "3.11"

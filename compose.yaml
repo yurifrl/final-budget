@@ -12,6 +12,7 @@ services:
       # - LLM_API_URL=$OLLAMA_HOST
       - LLM_API_URL="https://api.openai.com/v1/chat/completions"
       - LLM_API_KEY=$FINAL_BUDGET_OPENAI_API_KEY
+      - OPENAI_API_KEY=$FINAL_BUDGET_OPENAI_API_KEY
       - LLM_MODEL="gpt-4o-mini"
 
   app:

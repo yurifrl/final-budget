@@ -15,10 +15,10 @@ def test_pipeline_processes_real_pdf():
     data_input = DataInput("data/raw/real")
     latest_file = data_input.latest
     
-    # # Process the latest file
-    # result = pipeline.process_file(latest_file)
+    # Process the latest file
+    result = pipeline.process_file(latest_file)
     
-    # # Print result for inspection
-    # print("\n=== Processed Result ===")
-    # print(result)
-    # print("\n=== End of Result ===\n")
+    # Print result for inspection
+    print("\n=== Processed Result ===")
+    print(result)
+    print("\n=== End of Result ===\n")

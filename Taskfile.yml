@@ -6,7 +6,3 @@ tasks:
     desc: Run tests with pytest in verbose mode
     cmds:
       - python -m pytest tests/ -v -s
-  test-parser:
-    desc: Run tests with pytest in verbose mode
-    cmds:
-      - python -m pytest tests/test_parser.py -v -s
