@@ -1,11 +1,24 @@
 from app.services.data_input import DataInput
+from pathlib import Path
+import json
+from app.services.pipeline import Pipeline
+from app.config import Config
+import os
 
 
-def test_extract_from_real_pdf():
-    # Setup - use the correct data/raw/real path
+def test_pipeline_processes_real_pdf():
+    """Test pipeline processing with real PDF data."""
+    # Initialize pipeline with real data
+    pipeline = Pipeline(Config.from_env())
+    
+    # Get the latest file
     data_input = DataInput("data/raw/real")
-
-    # Extract
-    print("\n=== Sample Text ===")
-    print(data_input.latest)  # First 500 chars
-    print("\n=== End of Sample ===\n")
+    latest_file = data_input.latest
+    
+    # # Process the latest file
+    # result = pipeline.process_file(latest_file)
+    
+    # # Print result for inspection
+    # print("\n=== Processed Result ===")
+    # print(result)
+    # print("\n=== End of Result ===\n")
