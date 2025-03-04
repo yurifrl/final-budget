@@ -4,39 +4,9 @@
 
 # Now
 
-# Later
-```bash
-/project_root
-│── main.py
-│── config.py
-│── requirements.txt
-│── README.md
-│── /app
-│    │── __init__.py
-│    │── /api
-│    │    │── __init__.py
-│    │    │── endpoints.py
-│    │    │── schemas.py
-│    │── /services
-│    │    │── __init__.py
-│    │    │── extractor.py
-│    │    │── parser.py
-│    │    │── transformer.py
-│    │    │── loader.py
-│    │── /models
-│    │    │── __init__.py
-│    │    │── transaction.py
-│    │── /utils
-│    │    │── __init__.py
-│    │    │── helpers.py
-│── /tests
-│    │── __init__.py
-│    │── test_api.py
-│    │── test_services.py
-│    │── test_models.py
-│── /data
-│    │── raw/
-│    │── processed/
-│── /logs
-│    │── app.log
-```
+- Agent framework [PydanticAI](https://ai.pydantic.dev/#instrumentation-with-pydantic-logfire)
+- ETL [Introduction — petl 1.7.14 documentation](https://petl.readthedocs.io/en/stable/intro.html)
+- Longchain examples [alphasecio/langchain-examples: A collection of apps powered by the LangChain LLM framework.](https://github.com/alphasecio/langchain-examples/tree/main)
+- ollma with image example [ollama/docs/openai.md at main · ollama/ollama](https://github.com/ollama/ollama/blob/main/docs/openai.md#openai-python-library)
+- extracting structured data from images [vlm-run/vlmrun-hub: A hub for various industry-specific schemas to be used with VLMs.](https://github.com/vlm-run/vlmrun-hub)
+- Wrking with structured outputs from llm [instructor-ai/instructor: structured outputs for llms](https://github.com/instructor-ai/instructor)

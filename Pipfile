@@ -12,12 +12,14 @@ flake8 = "*"
 [packages]
 pytesseract = "*"
 pdf2image = "*"
-pandas = "*"
 requests = "*"
+
 python-dotenv = "*"
 dataclasses = "*"
 pytest = "*"
 pypdf = "*"
+langchain = "*"
+langchain-community = "*"
 
 [requires]
 python_version = "3.11"
