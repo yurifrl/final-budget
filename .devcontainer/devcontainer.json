@@ -9,7 +9,8 @@
                 "ms-python.python",
                 "ms-python.vscode-pylance",
                 "ms-python.black-formatter",
-                "anysphere.pyright"
+                "anysphere.pyright",
+                "alexcvzz.vscode-sqlite"
             ],
             "settings": {
                 "editor.formatOnSave": true,

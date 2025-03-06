@@ -27,6 +27,9 @@ unstructured = {extras = ["pdf"], version = "*"}
 langchain-unstructured = "*"
 langchain-core = "*"
 ipython = "*"
+langchain-chroma = "*"
+langchain-ollama = "*"
+langchain-text-splitters = "*"
 
 [requires]
 python_version = "3.11"
