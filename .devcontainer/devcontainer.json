@@ -9,9 +9,7 @@
                 "ms-python.python",
                 "ms-python.vscode-pylance",
                 "ms-python.black-formatter",
-                "ms-python.flake8",
-                "ms-python.mypy-type-checker",
-                "njpwerner.autodocstring"
+                "anysphere.pyright"
             ],
             "settings": {
                 "editor.formatOnSave": true,

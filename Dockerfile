@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-por \
     poppler-utils \
+    python3-dev \
+    libgl1-mesa-glx \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 RUN pip install pipenv

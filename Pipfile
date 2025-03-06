@@ -19,9 +19,14 @@ pytest = "*"
 pypdf = "*"
 langchain = "*"
 langchain-community = "*"
+openai = "*"
 langchain-openai = "*"
+Pillow = "*"
+PyMuPDF = "*"
+unstructured = {extras = ["pdf"], version = "*"}
 langchain-unstructured = "*"
 langchain-core = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.11"
