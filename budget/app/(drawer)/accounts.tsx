@@ -1,11 +1,12 @@
 import { Stack } from 'expo-router';
 import * as React from 'react';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, TextInput } from 'react-native';
 import { Icon } from '@roninoss/icons';
 import { FlashList } from '@shopify/flash-list';
 
 import { Container } from '~/components/Container';
 import { Text } from '~/components/nativewindui/Text';
+import { Toggle } from '~/components/nativewindui/Toggle';
 import { useColorScheme } from '~/lib/useColorScheme';
 
 // Mock data structure for accounts
@@ -22,26 +23,6 @@ type AccountTransaction = {
   cleared: boolean;
 };
 
-type Column = {
-  id: string;
-  label?: string;
-  width: string;
-  align?: string;
-};
-
-// Column definitions for better maintainability
-const columns: Column[] = [
-  { id: 'checkbox', width: 'w-2' },
-  { id: 'account', label: 'Account', width: 'w-28' },
-  { id: 'date', label: 'Date', width: 'w-28' },
-  { id: 'payee', label: 'Payee', width: 'w-40' },
-  { id: 'category', label: 'Category', width: 'flex-1' },
-  { id: 'memo', label: 'Memo', width: 'w-40' },
-  { id: 'outflow', label: 'Outflow', width: 'w-28', align: 'text-right' },
-  { id: 'inflow', label: 'Inflow', width: 'w-28', align: 'text-right' },
-  { id: 'status', width: 'w-6' },
-];
-
 // Mock data
 const mockTransactions: AccountTransaction[] = [
   {
@@ -50,53 +31,108 @@ const mockTransactions: AccountTransaction[] = [
     date: '18/02/2025',
     payee: 'Manual Balance Adjustment',
     category: 'Inflow: Ready to Assign',
-    memo: '',
+    memo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     inflow: 14539.58,
     cleared: true,
   },
-  // Add more mock transactions as needed
+  {
+    id: '2',
+    account: 'Itau Cartão',
+    date: '18/02/2025',
+    payee: 'Manual Balance Adjustment',
+    category: 'Inflow: Ready to Assign',
+    memo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    outflow: 14539.58,
+    cleared: false,
+  },
+  {
+    id: '3',
+    account: 'Itau Cartão',
+    date: '18/02/2025',
+    payee: 'Manual Balance Adjustment',
+    category: 'Inflow: Ready to Assign',
+    memo: '',
+    outflow: 14539.58,
+    cleared: false,
+  },
 ];
 
 const TableHeader = () => (
-  <View className="grid grid-cols-9 items-center border-b border-border bg-card px-3 py-4">
-    {columns.map((col) => (
-      <View key={col.id} className={col.width}>
-        {col.label && (
-          <Text className={`font-medium truncate ${col.align ?? ''}`}>
-            {col.label}
-          </Text>
-        )}
-      </View>
-    ))}
+  <View className="grid grid-cols-9 items-center border-b border-border bg-card px-2 py-3">
+    <View className="w-4" />
+    <Text className="w-24 font-medium truncate">Account</Text>
+    <Text className="w-20 font-medium truncate">Date</Text>
+    <Text className="w-32 font-medium truncate">Payee</Text>
+    <Text className="flex-1 font-medium truncate">Category</Text>
+    <Text className="w-32 font-medium truncate">Memo</Text>
+    <Text className="w-24 font-medium text-right">Outflow</Text>
+    <Text className="w-24 font-medium text-right">Inflow</Text>
+    <View className="w-4" />
   </View>
 );
 
 type TableRowProps = {
   item: AccountTransaction;
   onToggleSelect: (id: string) => void;
+  onToggleCleared: (id: string) => void;
+  onUpdateMemo: (id: string, memo: string) => void;
 };
 
-const TableRow = React.memo(({ item, onToggleSelect }: TableRowProps) => {
+const TableRow = React.memo(({ item, onToggleSelect, onToggleCleared, onUpdateMemo }: TableRowProps) => {
   const { colors } = useColorScheme();
+  const [isEditingMemo, setIsEditingMemo] = React.useState(false);
+  const [memoText, setMemoText] = React.useState(item.memo);
   
+  const handleMemoSubmit = () => {
+    onUpdateMemo(item.id, memoText);
+    setIsEditingMemo(false);
+  };
+
   return (
-    <View className="grid grid-cols-9 items-center border-b border-border bg-white dark:bg-transparent px-3 py-4 hover:bg-muted/50">
-      <Pressable onPress={() => onToggleSelect(item.id)} className="w-6 items-center">
-        <View className={`h-4 w-4 rounded border border-border ${item.selected ? 'bg-primary' : 'bg-transparent'}`} />
-      </Pressable>
-      <Text className="w-28 truncate" color="secondary">{item.account}</Text>
-      <Text className="w-28" color="secondary">{item.date}</Text>
-      <Text className="w-40 truncate" color="secondary">{item.payee}</Text>
+    <View className="grid grid-cols-9 items-center border-b border-border bg-white dark:bg-transparent px-2 py-3">
+      <View className="w-4 items-center justify-center">
+        <Toggle
+          value={item.selected}
+          onValueChange={() => {
+            onToggleSelect(item.id);
+          }}
+        />
+      </View>
+      <Text className="w-24 truncate" color="secondary">{item.account}</Text>
+      <Text className="w-20" color="secondary">{item.date}</Text>
+      <Text className="w-32 truncate" color="secondary">{item.payee}</Text>
       <Text className="flex-1 truncate" color="secondary">{item.category}</Text>
-      <Text className="w-40 truncate" color="secondary">{item.memo}</Text>
-      <Text className="w-28 text-right" color="secondary">
+      <Pressable className="w-32 min-h-[24px]" onPress={() => setIsEditingMemo(true)}>
+        {isEditingMemo ? (
+          <TextInput
+            value={memoText}
+            onChangeText={setMemoText}
+            onBlur={handleMemoSubmit}
+            onSubmitEditing={handleMemoSubmit}
+            autoFocus
+            placeholder="Add memo"
+            placeholderTextColor={colors.grey2}
+            className="border border-border rounded px-2 py-1 dark:text-white w-full h-full"
+          />
+        ) : (
+          <Text color="secondary" className="truncate min-h-[24px]">
+            {item.memo || " "}
+          </Text>
+        )}
+      </Pressable>
+      <Text className="w-24 text-right" color="secondary">
         {item.outflow ? `R$${item.outflow.toFixed(2)}` : ''}
       </Text>
-      <Text className="w-28 text-right" color="primary">
+      <Text className="w-24 text-right" color="primary">
         {item.inflow ? `R$${item.inflow.toFixed(2)}` : ''}
       </Text>
-      <View className="w-6 items-center">
-        {item.cleared && <Icon name="check-circle" size={16} color={colors.primary} />}
+      <View className="w-4 items-center justify-center">
+        <Toggle
+          value={item.cleared}
+          onValueChange={() => {
+            onToggleCleared(item.id);
+          }}
+        />
       </View>
     </View>
   );
@@ -115,6 +151,22 @@ export default function Accounts() {
     );
   }, []);
 
+  const toggleCleared = React.useCallback((id: string) => {
+    setTransactions(prev =>
+      prev.map(t =>
+        t.id === id ? { ...t, cleared: !t.cleared } : t
+      )
+    );
+  }, []);
+
+  const updateMemo = React.useCallback((id: string, memo: string) => {
+    setTransactions(prev =>
+      prev.map(t =>
+        t.id === id ? { ...t, memo } : t
+      )
+    );
+  }, []);
+
   return (
     <>
       <Stack.Screen options={{ title: 'Accounts' }} />
@@ -124,7 +176,12 @@ export default function Accounts() {
           <FlashList
             data={transactions}
             renderItem={({ item }) => (
-              <TableRow item={item} onToggleSelect={toggleSelection} />
+              <TableRow 
+                item={item} 
+                onToggleSelect={toggleSelection}
+                onToggleCleared={toggleCleared}
+                onUpdateMemo={updateMemo}
+              />
             )}
             estimatedItemSize={56}
             keyExtractor={item => item.id}
