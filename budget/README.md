@@ -1,50 +1,19 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+- Framework [Expo Application Services (EAS)](https://expo.dev/eas)
+- To run the app locally [Vysor](https://www.vysor.io/)
+- Figma code generation [Anima - Figma to Code React, HTML, CSS, Tailwind, MUI (DevMode Inspect React / HTML / Vue / CSS) | Figma](https://www.figma.com/community/plugin/857346721138427857/anima-figma-to-code-react-html-css-tailwind-mui-devmode-inspect-react-html-vue-css)
+- Mui componentt framework for figma [MUI for Figma - MUI Store](https://mui.com/store/items/figma-react/)
+- Component library [React Table | TanStack Table React Docs](https://tanstack.com/table/latest/docs/framework/react/react-table)
+- Tailwind component library [Table - Catalyst UI Kit for Tailwind CSS](https://catalyst.tailwindui.com/docs/table)
+- Tailwind plus [Catalyst - Tailwind CSS Application UI Kit](https://tailwindcss.com/plus/ui-kit)
+- Grid table component library [Demo - Performance Grid](https://www.ag-grid.com/example/)
+- Tailwind ui  Kit [TW Elements - 500+ free Tailwind CSS components](https://tw-elements.com/)
+- Framework [Remix - Build Better Websites](https://remix.run/)
+- State management [Introduction - Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction)
 
-1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+## Backend
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Backend [PocketBase - Open Source backend in 1 file](https://pocketbase.io/)
+- Backend [Appwrite - Build like a team of hundreds](https://appwrite.io/)
