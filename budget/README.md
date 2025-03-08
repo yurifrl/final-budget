@@ -11,7 +11,6 @@
 - Tailwind ui  Kit [TW Elements - 500+ free Tailwind CSS components](https://tw-elements.com/)
 - Framework [Remix - Build Better Websites](https://remix.run/)
 - State management [Introduction - Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction)
-
 - [Home | NativeWind](https://www.nativewind.dev/)
     - [Component Libraries | NativeWind](https://www.nativewind.dev/guides/component-libraries)
 
