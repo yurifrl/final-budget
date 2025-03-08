@@ -1,6 +1,6 @@
 # Data
-data/raw/real/
-data/processed/
+**/data/raw/real/
+**/data/processed/
 # Ours
 secrets/
 outputs/

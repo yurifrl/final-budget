@@ -1,8 +1,4 @@
 version: '3'
 
-# Define the tasks
-tasks:
-  test:
-    desc: Run tests with pytest in verbose mode
-    cmds:
-      - python -m pytest tests/ -v -s
+includes:
+  pdf: ./pdf/Taskfile.yml

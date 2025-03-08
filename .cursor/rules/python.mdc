@@ -5,3 +5,4 @@ alwaysApply: false
 ---
 - Use pipenv not requirements.txt
 - Dont use try catch
+- Dont use docstrings
